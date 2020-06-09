@@ -1,1 +1,1 @@
-Toda la información requerida sobre este proyecto se encuentra en wiki.md
+Toda la información requerida sobre este proyecto se encuentra en Wiki.md

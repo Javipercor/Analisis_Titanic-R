@@ -7,38 +7,42 @@ output:
       toc: true
       toc_depth: 3
 ---
+<style>
+body {
+text-align: justify}
+</style>
 \newpage
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# 1. Descripción del dataset.   
-El conjunto de datos está disponible a partir del enlace de kaggle referente a la competición del titatic. Para este análisis hemos decidido actuar con el dataset completo (train+test) dejando fuera del análisis inicial la variable relativa a la supervivencia, que será tenida en cuenta en el apartado de análisis. El dataset de test será preparado, pero solo usado en el caso de la regresión para probar nuestro modelo.  
-Primero realizamos unas exploración general de los datos que tenemos
+# 1. Descripción del dataset   
+El conjunto de datos está disponible a partir del enlace de kaggle referente a la competición del titanic. Para este análisis hemos decidido actuar con el dataset completo (train+test) dejando fuera del análisis inicial la variable relativa a la supervivencia, que será tenida en cuenta en el apartado de análisis. El dataset de test será preparado, pero solo usado en el caso de la regresión para probar nuestro modelo.  
+Primero realizamos unas exploración general de los datos que tenemos.
 
 En total tenemos datos sobre 1309 pasajeros y 12 variables referentes a ellos que se explican a continuación:    
   
 
   * PassengerId: ID del pasajero.  
-  * Survived: Si el pasajero ha sobrevivido o no al hundimiento (0=no, 1=yes)  
-  * Pclass: Clase en la que viajaba en el titanic (1, 2, 3), siendo mayor clase a menor valor  
-  * Name: Nombre del pasajero  
-  * Sex: sexo del pasajero  
-  * Age: edad del pasajero en años  
-  * SibSp: número (cantidad) de relación familiar (Sibiling/ Spouse)  
-  * Parch: número (cantidad) de relación familiar (Parent/child)   
-  * Ticket: número del ticket     
-  * Fare: precio del ticket  
-  * Cabin: número de la cabina  
-  * Embarked: Puerto en el que ha embarcado (Cherbourg, Queenstown,Southampton) 
+  * Survived: Si el pasajero ha sobrevivido o no al hundimiento (0=no, 1=yes).  
+  * Pclass: Clase en la que viajaba en el titanic (1, 2, 3), siendo mayor clase a menor valor.  
+  * Name: Nombre del pasajero.  
+  * Sex: sexo del pasajero.  
+  * Age: edad del pasajero en años.  
+  * SibSp: número (cantidad) de relación familiar (Sibiling/ Spouse).  
+  * Parch: número (cantidad) de relación familiar (Parent/child).   
+  * Ticket: número del ticket.     
+  * Fare: precio del ticket.  
+  * Cabin: número de la cabina.  
+  * Embarked: Puerto en el que ha embarcado (Cherbourg, Queenstown,Southampton). 
   
   
 De los 1309 pasajeros, tenemos el resultado de supervivencia para 891 de ellos.  
 El objetivo perseguido con este conjunto de datos es llegar a conocer que variables fueron las más influyentes a la hora de sobrevivir a la tragedia del titanic, por ejemplo, si el nivel socioeconómico el sexo o la edad tuvieron impacto en la salvación.    
 \newpage
 
-# 2. Integración y selección de los datos de interés a analizar.  
+# 2. Integración y selección de los datos de interés a analizar  
 Lo primero será cargar los registros y combinarlos para llegar a las 1309 entradas, y hacer una observación inicial de los valores que tenemos.
 ```{r echo=TRUE}
 #Cargamos los datos y combinamos para poder analizar los datos de entrada que tenemos
@@ -73,10 +77,10 @@ str(full_data)
 
 \newpage
 
-# 3. Limpieza de los datos.  
+# 3. Limpieza de los datos  
 
 ## 3.1. Localización y tratamiento de valores nulos y vacíos  
-Una vez cargados todos los valores, procedemos a revisar que las columnas seleccionadas no tiene valores nulos o vacíos
+Una vez cargados todos los valores, procedemos a revisar que las columnas seleccionadas no tiene valores nulos o vacíos.
 ```{r echo=TRUE}
 #Se revisa el dataset para ver la incidencia de valores nulos y NA,
 #también podríamos hacerlo aplicndo summary(full_data)
@@ -85,7 +89,7 @@ colSums((full_data==''))
 ```
 Podemos observar como la variable Survived tiene valores NA, pero son los que hemos introducido nosotros manualmente para la unión del dataset, por lo que los mantendremos invariables.  
 En el caso de la variable Age vemos como 263 de los registros presentan el valor NA. Para solucionar esta problemática usaremos la función kNN() del paquete VIM, siguiendo las recomendaciones de los apuntes debido a su robusted y sencillez de uso. 
-También observamos que nos falta un valor de Fare, por lo que aplicaremos la misma técnica
+También observamos que nos falta un valor de Fare, por lo que aplicaremos la misma técnica.
 ```{r echo=TRUE}
 suppressWarnings(suppressMessages(library(VIM)))
 #Se realiza la imputación de valores NA
@@ -94,7 +98,7 @@ full_data$Fare<-kNN(full_data)$Fare
 colSums(is.na(full_data))
 ```
 
-Para el caso de valores vacíos en la variable embarked, se ha decidido asignar a NA y realizar la imputación con KNN
+Para el caso de valores vacíos en la variable embarked, se ha decidido asignar a NA y realizar la imputación con KNN.
 ```{r echo=TRUE}
 full_data$Embarked[full_data$Embarked==""]=NA
 full_data$Embarked<-kNN(full_data)$Embarked
@@ -102,8 +106,8 @@ colSums((full_data==''))
 ```
 \newpage
 
-## 3.2. Identificación y tratamiento de valores extremos.  
-El siguiente paso será comprobar que nuestras variables numéricas no contienen valores extremos, y en el caso de que existan decidir que hacer con ellos. Son variables numérciso la edad (Age), el precio del billete (Fare), el número de parientes y esposas (sibsp) y el número de padres e hijos (parch)  
+## 3.2. Identificación y tratamiento de valores extremos  
+El siguiente paso será comprobar que nuestras variables numéricas no contienen valores extremos, y en el caso de que existan decidir que hacer con ellos. Son variables numérciso la edad (Age), el precio del billete (Fare), el número de parientes y esposas (sibsp) y el número de padres e hijos (parch).  
 ```{r echo=TRUE}
 #Graficación del boxplot para observar los valores extremos,
 #seguidos de la presentación numérica de esos valores
@@ -133,13 +137,13 @@ boxplot(full_data$Parch)
 boxplot.stats(full_data$Parch)$out
 ```
 
-Observando los valores extremos que tenemos en nuestros datos, las variables estudiadas y l distribución de los demás valores, se han decidido mantente intactos tal cual están.  
+Observando los valores extremos que tenemos en nuestros datos, las variables estudiadas y la distribución de los demás valores, se han decidido mantente intactos tal cual están.  
 En el caso de age, debido a que estos valores extremos son producidos debido a que la distribución de edades indica que la mayor parte de los pasajeros eran jóvenes (mediana alrededor de 30 también).  
 En el caso del precio del pasaje, los valores extremos se deben a que la mayor parte de billetes han sido de clase baja, como se puede ver en el summary del priemr apartado, centrándonos en los valores de mediana de Pclass.  
-En el caso de los familiares y la relación padre hijo, mantendremos también los valores extremos ya que cuadran con la densidad de las familias de la época, siendo 7-8 hijos normal. Para el caso de parentesco, un valor elevado nos puede indicar el viaje de familais enteras, o núcleos familiares grandes.
+En el caso de los familiares y la relación padre-hijo, mantendremos también los valores extremos ya que cuadran con la densidad de las familias de la época, siendo 7-8 hijos normal. Para el caso de parentesco, un valor elevado nos puede indicar el viaje de familais enteras, o núcleos familiares grandes.
 
 
-## 3.3. Exportación de datasets.
+## 3.3. Exportación de datasets
 ```{r echo=TRUE}
 #Genero los datasets para al regresión
 Datos_regresion=na.omit(full_data)
@@ -157,15 +161,17 @@ write.csv(Datos_predict_kaggle, "../datasets/titanic_predict_kaggle.csv", row.na
 \newpage
 
 
-# 4. Análisis de los datos.  
+# 4. Análisis de los datos  
 
-## 4.1. Selección de los grupos de datos que se quieren analizar/comparar (planificación de los análisis a aplicar).  
-A la hora de realizar el análisis, tenemos varias vertientes.  
-La primera sería ver el impacto del nivel socioeconómico en la supervivencia, es decir, si los ricos se han salvado en su mayor parte frente a los pobres.  
-Otro tema a analizar sería el impacto de la clase de viaje en el precio o si existe relación entre el precio pagado y la edad de los viajeros.  
-También nos gustaría analizar como se distribuyen los diferentes sexos entre los supervivientes y los muertos, y si el puerto de embarque se puede relacionar con haber sobrevivido más o menos.  
-También tendremos presente la hipótesis de si la mayor edad va unida a mayor mortalidad o no.
-Por último nos gustaría comprobar una frase que es muy mítica en las películas, 'Las mujeres y los niños primero', para ello vamos a analizar por sexo.  
+## 4.1. Selección de los grupos de datos que se quieren analizar/comparar (planificación de los análisis a aplicar)  
+A la hora de realizar el análisis, tenemos varias vertientes.
+La primera sería si existe relación entre el precio pagado y la edad de los viajeros.  
+La segunda si existe relación entre la clase de viaje y el precio.  
+La tercera sería ver el impacto del nivel socioeconómico en la supervivencia, es decir, si los ricos se han salvado en su mayor parte frente a los pobres.  
+También nos gustaría analizar como se distribuyen los diferentes sexos entre los supervivientes y los muertos, y si el puerto de embarque se puede relacionar con haber sobrevivido más o menos.    
+La cuarta esta relacionada con probar la hipótesis de si la mayor edad va unida a mayor mortalidad o no.
+Por último queremos intentar predecir si alguien sobrevive o no en función de las variables disponibles
+Indicar que los análisis por sexo y edad serían apra comprobar parcialmente una frase que es muy mítica en las películas, 'Las mujeres y los niños primero'.
 Para ello generamos los distintos datasets, que podrían ser utilizados para el análisis.  
 ```{r echo=TRUE}
 #Datos completos
@@ -195,8 +201,8 @@ full_data.vivos_edad=full_data.vivos_edad$Age
 ```
 Indicar que estos son algunos de los grupos de interés detectados en los datos, pero que no todos han sido utilizados, o utilizados en forma de datasets distintos durante los análisis,y que en la mayoría de los casos se han extraído directamente del dataset de referencia limpio.  
 
-## 4.2. Comprobación de la normalidad y homogeneidad de la varianza.  
-Para la comprobaciónd e la normalidad de nuestras variables numéricas haremos uso del conocido test de Shapiro-Wilk, en contraposición con otros métodos como  Kolmogorov-Smirnov, debido a la robusted y donde comprobaremos que el p-valor es superior a 0.05 para aceptar la hipótesis de normalidad
+## 4.2. Comprobación de la normalidad y homogeneidad de la varianza  
+Para la comprobaciónd e la normalidad de nuestras variables numéricas haremos uso del conocido test de Shapiro-Wilk, en contraposición con otros métodos como  Kolmogorov-Smirnov, debido a la robusted y donde comprobaremos que el p-valor es superior a 0.05 para aceptar la hipótesis de normalidad.
 ```{r echo=TRUE}
 #Comprobación de la nomrlidad
 shapiro.test(full_data$Age)
@@ -220,8 +226,8 @@ fligner.test(Fare ~ Pclass, data = (full_data))
 ```
 Como podemos ver, en ninguno de los dos casos de interés se cumple la condición de homocedasticidad antendiendo a sus p-valores.  
 
-## 4.3. Aplicación de pruebas estadísticas para comparar los grupos de datos.   
-### 4.3.1 Relación entre la edad y el precio del billete.  
+## 4.3. Aplicación de pruebas estadísticas para comparar los grupos de datos   
+### 4.3.1 Relación entre la edad y el precio del billete  
 Para este caso aplicaremos la correlación entre ambas variables numéricas. Al estar antes dos variables que no cumplen la condición de normalidad, debemos usar la correlación de Spearman, ya que a diferencia de Pearson, este test no asume normalidad.
 ```{r echo=TRUE}
 #Cálculo correlación
@@ -230,10 +236,10 @@ test$estimate
 test$p.value
 
 ```
-El resultado nos aporta un alto nivel de confianza gracias al p-valor que obtenemos, pero vemos que el grado de correlación entre las varaibles es muy pequeño  
+El resultado nos aporta un alto nivel de confianza gracias al p-valor que obtenemos, pero vemos que el grado de correlación entre las varaibles es muy pequeño.  
 
-### 4.3.2 Relación entre la clase y el precio del billete.¿No varía según clases?.  
-Para este caso aplicaremos el test de Kruskal-Wallis, que vendría a ser la alternativa al ANOVA, que compara una variable cuantitativa con una variable objetivo con más de dos clases
+### 4.3.2 Relación entre la clase y el precio del billete.¿No varía según clases?  
+Para este caso aplicaremos el test de Kruskal-Wallis, que vendría a ser la alternativa al ANOVA, que compara una variable cuantitativa con una variable objetivo con más de dos clases.
 ```{r echo=TRUE}
 #Cálculo correlación
 test=kruskal.test(Pclass ~ Fare, data = full_data)
@@ -241,10 +247,10 @@ test$p.value
 
 
 ```
-Cómo se puede ver en el resultado por el p-valor, hay diferencias significativas entre el precio de las tres clases  
+Cómo se puede ver en el resultado por el p-valor, hay diferencias significativas entre el precio de las tres clases.  
 
 ### 4.3.3 Influencia de las variables cualitativas en la supervivencia
-Para buscar estas relaciones, aplicaremos el test de chi cuadrado donde poder ver la relación de las diferentes clases a la hora de viajar, el sexo o dónde se ha embarcado con la supervivencia, ya que estaríamos ante una comparación de variables cualitativas
+Para buscar estas relaciones, aplicaremos el test de chi cuadrado donde poder ver la relación de las diferentes clases a la hora de viajar, el sexo o dónde se ha embarcado con la supervivencia, ya que estaríamos ante una comparación de variables cualitativas.
 ```{r echo=TRUE}
 #Influencia clase sobre superviencia
 test=chisq.test(full_data$Survived,full_data$Pclass)
@@ -253,7 +259,7 @@ test$residuals
 
 ```
 En este primer caso observamos como los pasajeros de tercera tienen una relación positiva con haber muerto, es decir, que viajar en tercera clase se relaciona con no haber sobrevivido en mayor medida que las otras dos clases, mientras que haber viajado en primera clase,se relaciona fuertemente con haber sobrevivido.  
-Estos resultados obtenido los podemos considerar significativos debido a su p-valor menor a 0.05  
+Estos resultados obtenido los podemos considerar significativos debido a su p-valor menor a 0.05.  
 
 ```{r echo=TRUE}
 #Influencia sexo sobre supervivencia
@@ -263,7 +269,7 @@ test$residuals
 
 ```
 Como podemos observar analizando los residuos, ser mujer influye muy positivamente para ser asignado al grupo de supervivientes, mientras siendo hombre ocurre al revés.  
-Estos resultados obtenido los podemos considerar significativos debido a su p-valor menor a 0.05  
+Estos resultados obtenido los podemos considerar significativos debido a su p-valor menor a 0.05.  
 ```{r echo=TRUE}
 #Influencia puerto de embarque sobre supervivencia
 test=chisq.test(full_data$Survived,full_data$Embarked)
@@ -286,8 +292,8 @@ test
 ```
 Como tenemos un p_valor mucho menor a 0.05 podemos rechazar la hipótesis nula, concluyendo que a mayor edad, menor será la supervivencia.  
 
-### 4.3.5 Modelo de Regresión Logística.
-En nuestro caso, nos interesa predecir la variable objetivo Supervivencia, por lo que debemos alpicar un modelo de regresión que nos clasifique en las dos clases. Por ello vamos a hacer uso de los generalized linear models en su configuración binaria para crear 5 modelos de regresión logística. Acto seguido usaremos el mejor modelo para predecir la supervivencia del conjunto de test
+### 4.3.5 Modelo de Regresión Logística  
+En nuestro caso, nos interesa predecir la variable objetivo Supervivencia, por lo que debemos alpicar un modelo de regresión que nos clasifique en las dos clases. Por ello vamos a hacer uso de los generalized linear models en su configuración binaria para crear 5 modelos de regresión logística. Acto seguido usaremos el mejor modelo para predecir la supervivencia del conjunto de test.
 ```{r echo=TRUE}
 #Regresores cuantitativos
 Age=Datos_regresion_train$Age
@@ -321,7 +327,7 @@ modelo6 <- glm(Survived ~ Age + Pclass + Sex + SibSp + Embarked,
                data = Datos_regresion_train, family = "binomial")
 AIC(modelo6)
 ```
-De los modelos probados nos quedamos con el que presenta menor valor de AIC que valora como se adapta el modelo a los datos, pero penalizando el número de variables que se introducen
+De los modelos probados nos quedamos con el que presenta menor valor de AIC que valora como se adapta el modelo a los datos, pero penalizando el número de variables que se introducen.
 ```{r echo=TRUE}
 #Predict sobre el pequeño conjunto marcado que nos hemos guardado
 
@@ -333,7 +339,7 @@ prediction
 misClasificError <- mean(prediction != Datos_regresion_test$Survived)
 print(paste('Accuracy',1-misClasificError))
 ```
-Una vez hemos probado nuestro modelo en datos conocidos y hemos obtenido un 78.5% de acierto, podemos aplicar este modelo a nuevos datos, en este caso a los Datos_predict, que corresponden con el dataset de prueba de kaggle (test.csv), pero tras haber imputado valores nulos
+Una vez hemos probado nuestro modelo en datos conocidos y hemos obtenido un 78.5% de acierto, podemos aplicar este modelo a nuevos datos, en este caso a los Datos_predict, que corresponden con el dataset de prueba de kaggle (test.csv), pero tras haber imputado valores nulos.
 ```{r echo=TRUE}
 #Predict sobre el pequeño conjunto marcado que nos hemos guardado
 prediction_kaggle=predict(modelo6,
@@ -342,11 +348,11 @@ prediction_kaggle=predict(modelo6,
 prediction_kaggle <- ifelse(prediction_kaggle > 0.5,1,0)
 prediction_kaggle
 ```
-# 5. Representación de los resultados a partir de tablas y gráficas.  
+# 5. Representación de los resultados a partir de tablas y gráficas  
 Realizaremos la representación de los resultados de los cinco objetivos de análisis resultantes de comparar grupos de datos.  
 Las representaciones aquí presentes vendrán a complementar las ya existentes en el apartado de análisis, que en su mayor parte han sido tabla y resultados de la ejecución de los distintos algoritmos.  
 
-## 5.1 Relación entre la edad y el precio del billete. 
+## 5.1 Relación entre la edad y el precio del billete 
 En este apartado hemos visto como estadísticamente no había relación entre el precio del billete y la edad de los pasajeros. Vamos a realizar una representación de estas dos variables mediante una gráfica lineal con todas las filas para observar esta ausencia de relación.
 ```{r echo=TRUE}
 #Código de representación lineal
@@ -405,7 +411,7 @@ boxplot(Age~Survived,data=full_data,
 ```
 Esta representación viene a indicar lo mismo que en la parte del análisis, pero ahora también podemos observar que las diferencias existen pero son pequeñas(en análisis eran 30 años vs 27 aproximadamente, similar a lo que se nos indica aquí).  
 
-## 5.5 Modelo de Regresión Logística.
+## 5.5 Modelo de Regresión Logística
 Todas las representaciones necesarias se han hecho mediante tablas en el apartado de análisis, tanto para la prediction del conjunto de test, como la predicción del conjunto de kaggle, como para los valores de validación de los diferentes modelos.  
 \newpage
 
@@ -415,9 +421,9 @@ A lo largo de este trabajo hemos realizado la limpieza de los datos del titanic 
 Del análisis podemos extraer diferentes cosas, como que ninguna de nuestra variables cuantitativas seguía una distribución normal ni cumplía con las condiciones de homocedasticidad.  
 En lo referente a las relaciones entre variables, hemos intentado aplicar diversas técnicas siempre teniendo en cuenta los datos con los que estábamos trabajando:  
 
-* Cómo primer objeto de análisis se quiso estudiar si la edad de los viajeros influía en el precio que estos paganban por subir a bordo. Del análisis estadístico extrajimos que la relación entra ambas variables era muy pequeña y mediante el análisis visual pudimos ver como el precio pagado por el pasaje no sufría variaciones de distribución significativas conforme avanzamos en la edad.  
+* Cómo primer objeto de análisis se quiso estudiar si la edad de los viajeros influía en el precio que estos paganba por subir a bordo. Del análisis estadístico extrajimos que la relación entra ambas variables era muy pequeña y mediante el análisis visual pudimos ver como el precio pagado por el pasaje no sufría variaciones de distribución significativas conforme avanzamos en la edad.  
 
-* Cómo segundo objetivo teníamos el averiguar si el precio del billete era insensible al cambio de clase, algo que mediante el test realizado quedó falsado con un p_valor muy por debajo del límite 0.05. Esto nos indicaba que habías variaciones en el precio según la clase en la que se viajase. Para complementar este análisis y ver como eran esas variaciones, realizamos la graficación boxplot que nos mostró como la primera clase era la más cara con diferencia, siendo la más barata la tercera clase. Al carecer de fechas de compra de los billetes, no podemos ahondar más en neustro análisis.  
+* Cómo segundo objetivo teníamos el averiguar si el precio del billete era insensible al cambio de clase, algo que mediante el test realizado quedó falsado con un p_valor muy por debajo del límite 0.05. Esto nos indicaba que habías variaciones en el precio según la clase en la que se viajase. Para complementar este análisis y ver como eran esas variaciones, realizamos la graficación boxplot que nos mostró como la primera clase era la más cara con diferencia, siendo la más barata la tercera clase. Al carecer de fechas de compra de los billetes, no podemos ahondar más en nuestro análisis sobre las causas de las fluctuaciones de precio.  
 
 * Nuestro tercer objetivo era ver como se relacionaban el sexo, la clase de viaje y el puerto de embarque con la supervivencia. Cómo conclusión, los hombres muerieron muchos más que las mujeres, la primera clase daba más garantías de salvarse y haber embarcado en el primer puerto, Southampton, también estaba ligado a mayor mortalidad. Mediante los métodos gráficos del apartado anterior se pueden ver con más claridad estas relaciones y confirmar visualmente los resultados del análisis de chi cuadrado. Los resultados de sexo también pueden ir ligados al personal de tripulación del barco y sería un interesante análisis para futuro.  
 
