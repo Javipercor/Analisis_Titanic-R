@@ -7,3 +7,4 @@ titanic_clean_completo.csv hace referencia al conjunto de datos tras eliminar va
 titanic_clean_regresion_test.csv contiene la información de 700 registros de viajeros de los cuales no tenemos ningún valor nulo de Survived. Añadir también que se han eliminado las columnas passengerId, Name, Ticket y Cabin de los conjuntos de datos originales.  
 titanic_clean_regresion_test.csv está formado por 191 registros  de los cuales no tenemos ningún valor nulo en la variable Survived. Añadir también que se han eliminado las columnas passengerId, Name, Ticket y Cabin de los conjuntos de datos originales.  
 titanic_predict_kaggle.csv hace referencia al conjunto de datos, que es parte de titanic_clean_completo.csv pero nos hemos quedado solo con los registros que no tenían ningún valor asociado a la variable Survived.  
+El fichero PRA2.rmd es el que contiene toda la ejecución y documentación de la práctica, y que ha sido usado para generar el archivo .pdf
