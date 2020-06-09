@@ -1,4 +1,4 @@
-Este repositorio se corresponde al trabajo realizado por Javier Pérez Córdova en los referente a la práctica 2 de tipología y ciclo de vida de los datos del Máster de ciencia de datos de la UOC.  
+Este repositorio se corresponde al trabajo realizado por Javier Pérez Córdova en lo referente a la práctica 2 de tipología y ciclo de vida de los datos del Máster de ciencia de datos de la UOC.  
 Todo el trabajo ha sido realizado por mi de manera individual, desde la selección del dataset, la búsqueda de ejemplos y ya ejecución del trabajo.  
 En la carpeta Sets se encuentran los conjuntos de datos utilizados para la realización de esta practica.  
 Tenemos train.csv y test.csv que son los archivos original descargados de la páginaweb Kaggle (https://www.kaggle.com/c/titanic/data)

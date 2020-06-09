@@ -431,3 +431,4 @@ Finalmente cabe decir, que se nos ha quedado en el tintero un análisis muy inte
 
 # 7. Código
 
+Tanto el código, como este mismo archivo, como los conjuntos de datos utilizados están disponibles en https://github.com/Javipercor/Analisis_Titanic-R/
